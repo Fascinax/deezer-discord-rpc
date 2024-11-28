@@ -1,4 +1,6 @@
 import i18next from 'i18next';
+import { setLanguage as setConfigLanguage } from './Config';
+import {tray, createContextMenu} from './Tray';
 
 i18next.init({
   lng: 'en',
@@ -44,7 +46,18 @@ i18next.init({
   }
 });
 
-export function changeLanguage(app: Electron.App, language: string) {
-  i18next.changeLanguage(language);
-  Config.setLanguage(app, language);
+export const translate = (key: string, options?: any): string => i18next.t(key, options) as string;
+
+export async function changeLanguage(app: Electron.App, language: string) {
+  await i18next.changeLanguage(language);
+
+  setConfigLanguage(app, language);
+
+  if (tray) {
+    const updatedMenu = createContextMenu(app);  
+    tray.setContextMenu(updatedMenu);
+  }
+
+  console.log('Language changed to:', language);
+  console.log('Current i18next language:', i18next.language);
 }
