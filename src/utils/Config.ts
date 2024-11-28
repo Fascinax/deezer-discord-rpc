@@ -30,6 +30,14 @@ export function get(app: Electron.App, key?: string) {
   return key ? data[key] : data;
 }
 
+export function getLanguage(app: Electron.App): string {
+  return get(app, 'language') || 'en';
+}
+
+export function setLanguage(app: Electron.App, language: string) {
+  set(app, 'language', language);
+}
+
 function getConfigPath(app: Electron.App) {
   const userDataPath = app.getPath('userData');
   return join(userDataPath, 'config.json');
